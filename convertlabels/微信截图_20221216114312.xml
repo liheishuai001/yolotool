@@ -1,0 +1,28 @@
+<?xml version="1.0" ?>
+<annotation>
+<folder>12月16号救生衣</folder>
+<filename>微信截图_20221216114312.png</filename>
+<path>D:\日常劳\金海星\群消息\陈伟\12月16号救生衣\微信截图_20221216114312.png</path>
+<source>
+    <database>Unknown</database>
+</source>
+<size>
+    <width>66</width>
+    <height>151</height>
+    <depth>3</depth>
+</size>
+
+<segmented>0</segmented>
+    <object>
+    <name>b_belt</name>
+    <pose>Unspecified</pose>
+    <truncated>0</truncated>
+    <difficult>0</difficult>
+    <bndbox>
+        <xmin>4</xmin>
+        <ymin>60</ymin>
+        <xmax>56</xmax>
+        <ymax>88</ymax>
+    </bndbox>
+</object>
+</annotation>
