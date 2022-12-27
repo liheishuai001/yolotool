@@ -10,10 +10,10 @@ imagefilepath = './images'
 labelpath = './labels'
 
 
-'''
-将按键精灵转换的底层函数
-'''
 def convert(size, box):
+    """
+    将按键精灵转换的底层函数
+    """
     dw = 1. / size[0]
     dh = 1. / size[1]
     x = (box[0] + box[1]) / 2.0
@@ -25,6 +25,7 @@ def convert(size, box):
     y = y * dh
     h = h * dh
     return x, y, w, h
+
 
 '''
 读取yolo格式数据
@@ -41,7 +42,6 @@ def read_yolo_boxes(label: str):
         yolo_boxes[l, :] = np.array(
             (float(line_split[1]), float(line_split[2]), float(line_split[3]), float(line_split[4])))
         yolo_labels[l] = int(line_split[0])
-
     return yolo_boxes, yolo_labels
 
 

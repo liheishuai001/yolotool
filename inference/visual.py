@@ -1,3 +1,4 @@
+import argparse
 import fiftyone as fo
 from fiftyone import ViewField as F
 import torch
@@ -10,7 +11,7 @@ def xyxytoxywh(bbox, size):
     y = bbox[1] / size[1]
     w = (bbox[2] - bbox[0]) / size[0]
     h = (bbox[3] - bbox[1]) / size[1]
-    return (x, y, w, h)
+    return x, y, w, h
 
 
 def predictions(view, dataset, model_path):
@@ -70,8 +71,19 @@ def evaluate(dataset):
 
 
 if __name__ == '__main__':
-    name = 'vest_dataset'
-    dataset_dir = '../data/vest'
+    """
+    通过fiftyone实现数据推理可视化，便于针对已标注的数据与模型的推理结论进行对比，从而快速进行模型验证。
+    -n (--name) 代表数据集名称，相同数据集名称后续加载将直接通过mongodb读取
+    -p (--path)代表数据集的路径，对应的yaml文件件名称为dataset.yaml
+    -m (--module)代表需要进行推理的pt文件路径
+    """
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-n', '--name', type=str, default='dataset', help='dataset name')
+    parser.add_argument('-p', '--path', type=str, default='../data', help='dataset path')
+    parser.add_argument('-m', '--module', type=str, default='yolov5s.pt', help='module path')
+    opt = parser.parse_args()
+    name = opt.name
+    dataset_dir = opt.path
     splits = ["train", "val"]
 
     if fo.dataset_exists(name):
@@ -86,10 +98,10 @@ if __name__ == '__main__':
                 tags=split,
             )
 
-    dataset.tags = ['vms', 'vest']
+    dataset.tags = ['vms', name]
     dataset.save()
     predictions_view = dataset.take(100, seed=2)
-    predictions(predictions_view, dataset, '../models/vest.pt')
+    predictions(predictions_view, dataset, opt.module)
 
     evaluate(dataset)
 
