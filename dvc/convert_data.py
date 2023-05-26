@@ -70,7 +70,7 @@ def convert_annotation(data: list[str], convert_path, labels_path, classes):
                 # w = 宽, h = 高， b= bndbox的数组 = ['xmin','xmax','ymin','ymax']
                 bb = convert((w, h), b)
                 outfile.write(str(cls_id) + " " + " ".join([str(a) for a in bb]) + '\n')
-    print("convert success total: %s", len(data))
+    print("convert success total: %s" % len(data))
 
 
 def upload_data(data, labels_path, images_path, bucket, access_key, secret_key,
@@ -92,7 +92,7 @@ def upload_data(data, labels_path, images_path, bucket, access_key, secret_key,
                        'labels': yolo_labels.astype(np.uint32),
                        'boxes': yolo_boxes.astype(np.float32)
                        })
-    print('upload success total: %s', len(data))
+    print('upload success total: %s' % len(data))
 
 
 if __name__ == '__main__':
@@ -112,9 +112,9 @@ if __name__ == '__main__':
     parser.add_argument('-s', '--source', type=str, default='../convertlabels', help='convert annotations path')
     parser.add_argument('-o', '--output', type=str, default='../labels', help='yolo annotations path')
     parser.add_argument('-img', '--image_path', type=str, default='../images', help='yolo image path')
-    parser.add_argument('-b', '--bucket', type=str, default='yolo', help='s3 bucket name')
-    parser.add_argument('-ak', '--access_key', type=str, required=True, help='s3 access key')
-    parser.add_argument('-sk', '--secret_key', type=str, required=True, help='s3 access secret key')
+    parser.add_argument('-b', '--bucket', type=str, default='', help='s3 bucket name')
+    parser.add_argument('-ak', '--access_key', type=str, help='s3 access key')
+    parser.add_argument('-sk', '--secret_key', type=str, help='s3 access secret key')
     parser.add_argument('-u', '--url', type=str, default='', help='s3 endpoint url')
     parser.add_argument('-c', '--classes', type=str, nargs='+', help='model class name')
     opt = parser.parse_args()

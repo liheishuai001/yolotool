@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/yoloautopush.iml" filepath="$PROJECT_DIR$/.idea/yoloautopush.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/yolotool.iml" filepath="$PROJECT_DIR$/.idea/yolotool.iml" />
     </modules>
   </component>
 </project>

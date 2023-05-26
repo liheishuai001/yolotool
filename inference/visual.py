@@ -2,8 +2,9 @@ import argparse
 import fiftyone as fo
 from fiftyone import ViewField as F
 import torch
-import cv2
 import numpy as np
+from yolo.hubconf import custom
+from yolo.utils.general import cv2
 
 
 def xyxytoxywh(bbox, size):
@@ -20,17 +21,20 @@ def predictions(view, dataset, model_path):
     """
     device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
     classes = dataset.default_classes
-    model = torch.hub.load('ultralytics/yolov5:v6.0', 'custom', path=model_path)
-    model.to(device)
+    # model = torch.hub.load('ultralytics/yolov5:v6.0', 'custom', model_path)
+    model = custom(model_path)
+    model.conf = 0.1
     model.eval()
 
     with fo.ProgressBar() as pb:
         for sample in pb(view):
             detections = []
-            raw_data = np.fromfile(sample.filepath, dtype=np.uint8)
-            image = cv2.imdecode(raw_data, -1)
-            h, w, c = image.shape
-            results = model(image[..., ::-1])
+            #raw_data = np.fromfile(sample.filepath, dtype=np.uint8)
+            image = cv2.imread(sample.filepath)
+            if not hasattr(image, 'shape'):
+                continue
+            h, w, *c = image.shape
+            results = model(image[:, :, ::-1], size=512)
             points = results.pandas().xyxy[0]
             if len(points) != 0:
                 for index, row in points.iterrows():
@@ -88,6 +92,13 @@ if __name__ == '__main__':
 
     if fo.dataset_exists(name):
         dataset = fo.load_dataset(name)
+        for split in splits:
+            dataset.add_dir(
+                dataset_dir=dataset_dir,
+                dataset_type=fo.types.YOLOv5Dataset,
+                split=split,
+                tags=split,
+            )
     else:
         dataset = fo.Dataset(name)
         for split in splits:
@@ -100,10 +111,10 @@ if __name__ == '__main__':
 
     dataset.tags = ['vms', name]
     dataset.save()
-    predictions_view = dataset.take(100, seed=2)
+    predictions_view = dataset.take(1000, seed=0)
     predictions(predictions_view, dataset, opt.module)
 
-    evaluate(dataset)
+    # evaluate(dataset)
 
     session = fo.launch_app(filter_view(predictions_view), desktop=True)
     session.wait()
