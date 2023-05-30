@@ -147,4 +147,5 @@ dmypy.json
 # Cython debug symbols
 cython_debug/
 
-/convertlabels/
+convertlabels
+labels
