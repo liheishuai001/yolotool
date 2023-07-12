@@ -56,7 +56,7 @@ def filter_view(view):
     """
     条件过滤,具备排序与条件
     """
-    return view.sort_by(F("predictions.detections").length(), reverse=True)\
+    return view.sort_by('predictions.detections.confidence', reverse=True)\
         .filter_labels('predictions', F('confidence') > 0.5)
 
 
@@ -111,8 +111,12 @@ if __name__ == '__main__':
 
     dataset.tags = ['vms', name]
     dataset.save()
-    predictions_view = dataset.take(1000, seed=0)
+    predictions_view = dataset.take(10, seed=0)
     predictions(predictions_view, dataset, opt.module)
+
+    bounds = dataset.bounds("predictions.detections.confidence")
+    print('置信度范围:')
+    print(bounds)
 
     # evaluate(dataset)
 
