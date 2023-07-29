@@ -111,7 +111,7 @@ if __name__ == '__main__':
 
     dataset.tags = ['vms', name]
     dataset.save()
-    predictions_view = dataset.take(10, seed=0)
+    predictions_view = dataset.take(1000, seed=0)
     predictions(predictions_view, dataset, opt.module)
 
     bounds = dataset.bounds("predictions.detections.confidence")
